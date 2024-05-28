@@ -62,7 +62,10 @@ namespace WebEngine::Core
         Engine* engine = reinterpret_cast< Engine* >( args );
 
         if ( !engine )
+        {
+            std::cout << "Can't cast args to Engine inside main loop" << std::endl;
             throw std::runtime_error( "Can't cast args to Engine inside main loop" );
+        }
 
         engine->mainLoop();
     }
@@ -71,9 +74,9 @@ namespace WebEngine::Core
     {
         std::shared_ptr< Window::SDL2 > window = Services::ServiceLocator::get< Window::SDL2 >();
 
-        window->pollEvents();
-        m_renderer->prepareFrame();
-        m_houseScene->draw( m_clock->getDeltaTime() );
-        window->swapBuffers();
+        // window->pollEvents();
+        // m_renderer->prepareFrame();
+        // m_houseScene->draw( m_clock->getDeltaTime() );
+        // window->swapBuffers();
     }
 }
