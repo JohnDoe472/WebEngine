@@ -53,7 +53,7 @@ file(
 add_executable(${WEB_ENGINE_PROJECT} ${WEB_ENGINE_CODE_LIST})
 
 target_compile_features(${WEB_ENGINE_PROJECT} PRIVATE cxx_std_17)
-set_target_properties(${WEB_ENGINE_PROJECT} PROPERTIES LINK_FLAGS "--bind -sALLOW_MEMORY_GROWTH --preload-file ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}resources@/")
+set_target_properties(${WEB_ENGINE_PROJECT} PROPERTIES LINK_FLAGS "-Wl,--export=__cpp_exception --bind -sALLOW_MEMORY_GROWTH --preload-file ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}resources@/")
 target_include_directories(${WEB_ENGINE_PROJECT} PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${WEB_ENGINE_EXTERNAL_INCLUDE_DIR}
