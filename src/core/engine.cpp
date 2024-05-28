@@ -74,9 +74,9 @@ namespace WebEngine::Core
     {
         std::shared_ptr< Window::SDL2 > window = Services::ServiceLocator::get< Window::SDL2 >();
 
-        // window->pollEvents();
-        // m_renderer->prepareFrame();
-        // m_houseScene->draw( m_clock->getDeltaTime() );
-        // window->swapBuffers();
+        window->pollEvents();
+        m_renderer->prepareFrame();
+        m_houseScene->draw( m_clock->getDeltaTime() );
+        window->swapBuffers();
     }
 }
