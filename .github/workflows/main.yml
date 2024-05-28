@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: mymindstorm/setup-emsdk@v14
       - name: Test 1
-      - run: ls -la .
+        run: ls -la .
       - name: Test 2
         run: find . -type f
       - name: Install thirdparty libraries
