@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html data-bs-theme="dark">
+  <head>
+    <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1, IE=edge">
+        <title>Web Engine</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <div class="container-fluid m-0 p-0">
+      <div class="row p-0">
+        <div class="col-3 p-0">
+          <div id="meshes-list" class="accordion">
+          </div>
+        </div>
+        <div class="col-9 vh-100 p-0 m-0 ">
+          <canvas class="vh-100" style="width: 100%;" id="canvas" oncontextmenu="event.preventDefault()" >
+          <script type="text/javascript">
+              var Module = {};
+              Module.canvas = document.getElementById('canvas');
+          </script>
+          <script async type="text/javascript" src="WebEngine.js"></script>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
