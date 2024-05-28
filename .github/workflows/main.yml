@@ -10,8 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: mymindstorm/setup-emsdk@v14
+      - name: Test 1
+      - run: ls -la .
+      - name: Test 2
+        run: find . -type f
       - name: Install thirdparty libraries
-        run: ls -la . && find . -type f && ./thirdparty/external_libs/build_dependencies.sh
+        run: ./thirdparty/external_libs/build_dependencies.sh
       - name: Generate project
         run: emcmake cmkae -Bbuild
       - name: Build project
