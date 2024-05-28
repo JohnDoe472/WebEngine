@@ -18,13 +18,11 @@
         </div>
         <div class="col-9 vh-100 p-0 m-0 ">
           <canvas class="vh-100" style="width: 100%;" id="canvas" oncontextmenu="event.preventDefault()" >
-          <script async type="text/javascript" src="WebEngine.js"></script>
           <script type="text/javascript">
-              var Module = require("./WebEngine.js");
-              var result = Module.onRuntimeInitialized = () => {
-                Module.canvas = document.getElementById('canvas');
-              }
+              var Module = {};
+              Module.onRuntimeInitialized = () => { Module.canvas = document.getElementById('canvas'); }
           </script>
+          <script async type="text/javascript" src="WebEngine.js"></script>
         </div>
       </div>
     </div>
