@@ -49,7 +49,6 @@ namespace WebEngine::Core
         Services::ServiceLocator::provide< Window::SDL2 >( settings );
 
         m_renderer = std::make_unique< OpenGL::Renderer >();
-        //m_defaultLevel = std::make_unique< Resources::Levels::DefaultLevel >();
         m_houseScene = std::make_unique< Resources::Levels::HouseScene >();
     }
 
@@ -74,7 +73,6 @@ namespace WebEngine::Core
 
         window->pollEvents();
         m_renderer->prepareFrame();
-        //m_defaultLevel->draw( m_clock->getDeltaTime() );
         m_houseScene->draw( m_clock->getDeltaTime() );
         window->swapBuffers();
     }
