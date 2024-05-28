@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Emscripten setup
-      - uses: mymindstorm/setup-emsdk@v14
+        uses: mymindstorm/setup-emsdk@v14
       - name: Code checkout
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
       - name: Install thirdparty libraries
         run: ./thirdparty/external_libs/build_dependencies.sh
       - name: Generate project
