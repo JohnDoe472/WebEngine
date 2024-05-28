@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: mymindstorm/setup-emsdk@v14
+      - uses: actions/checkout@v4
       - name: Test 1
         run: ls -la ../../
       - name: Test 2
