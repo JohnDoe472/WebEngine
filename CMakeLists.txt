@@ -72,7 +72,7 @@ endforeach()
 
 add_custom_command(TARGET ${WEB_ENGINE_PROJECT} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-        ${CMAKE_SOURCE_DIR}/src/WebEngine.html $<TARGET_FILE_DIR:${WEB_ENGINE_PROJECT}>/index.html)
+        ${CMAKE_SOURCE_DIR}/src/index.html $<TARGET_FILE_DIR:${WEB_ENGINE_PROJECT}>/index.html)
 
 add_custom_command(TARGET ${WEB_ENGINE_PROJECT} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
