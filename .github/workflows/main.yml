@@ -11,7 +11,9 @@ jobs:
     steps:
       - uses: mymindstorm/setup-emsdk@v14
       - name: Test 1
-        run: ls -la ../
+        run: ls -la ../../
+      - name: Test 2
+        run: ls -la ../WebEngine
       - name: Install thirdparty libraries
         run: ./thirdparty/external_libs/build_dependencies.sh
       - name: Generate project
