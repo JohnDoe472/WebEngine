@@ -41,6 +41,12 @@ foreach (ASSET_FILE ${WEB_ENGINE_ASSETS_LIST})
 endforeach ()
 
 set(WEB_ENGINE_PROJECT "WebEngine")
+    
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/thirdparty/bootstrap ${CMAKE_SOURCE_DIR}/bin/${CMAKE_SYSTEM_NAME}/${CMAKE_GENERATOR_PLATFORM}/bootstrap)
+
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/src/shaders ${CMAKE_SOURCE_DIR}/bin/${CMAKE_SYSTEM_NAME}/${CMAKE_GENERATOR_PLATFORM}/resources/shaders)
 
 file(
     GLOB_RECURSE WEB_ENGINE_CODE_LIST
@@ -73,14 +79,6 @@ endforeach()
 add_custom_command(TARGET ${WEB_ENGINE_PROJECT} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_SOURCE_DIR}/src/index.html $<TARGET_FILE_DIR:${WEB_ENGINE_PROJECT}>/index.html)
-
-add_custom_command(TARGET ${WEB_ENGINE_PROJECT} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/thirdparty/bootstrap $<TARGET_FILE_DIR:${WEB_ENGINE_PROJECT}>/bootstrap)
-
-add_custom_command(TARGET ${WEB_ENGINE_PROJECT} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/src/shaders $<TARGET_FILE_DIR:${WEB_ENGINE_PROJECT}>/resources/shaders)
 
 if(MSVC)
     set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Engine)
