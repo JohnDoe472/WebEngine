@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: mymindstorm/setup-emsdk@v14
       - name: Install thirdparty libraries
-        run: ./thirdparty/external_libs/build_dependencies.sh
+        run: ls -la && emcc --version && ./thirdparty/external_libs/build_dependencies.sh
       - name: Generate project
         run: emcmake cmkae -Bbuild
       - name: Build project
