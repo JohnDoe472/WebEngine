@@ -31,6 +31,7 @@ jobs:
         run: emcmake cmake -Bbuild
       - name: Build project
         run: cmake --build build
+      - name: Rebuild project to fix bug
         run: emmake make -C build
       - name: Setup Pages
         uses: actions/configure-pages@v5
