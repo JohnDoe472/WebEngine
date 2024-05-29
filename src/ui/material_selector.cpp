@@ -13,7 +13,7 @@ namespace WebEngine::UI
         }
     }
 
-    void MaterialSelector::addMesh( const std::string& name, const std::unique_ptr< Resources::Geometry::Mesh >& mesh )
+    void MaterialSelector::addMesh( const std::string& id, const std::unique_ptr< Resources::Geometry::Mesh >& mesh )
     {
         EM_ASM
         ( {
@@ -33,7 +33,7 @@ namespace WebEngine::UI
             meshContainerHeaderButton.setAttribute('data-bs-target', '#' + UTF8ToString($0) + '-materialsCollapse');
             meshContainerHeaderButton.setAttribute('aria-expanded', 'false');
             meshContainerHeaderButton.setAttribute('aria-controls', UTF8ToString($0) + '-materialsCollapse');
-            meshContainerHeaderButton.innerHTML = UTF8ToString($0);
+            meshContainerHeaderButton.innerHTML = UTF8ToString($1);
             meshContainerHeader.appendChild(meshContainerHeaderButton);
 
             let materialsSelector = document.createElement('div');
@@ -57,12 +57,12 @@ namespace WebEngine::UI
             meshContainer.appendChild(meshContainerHeader);
             meshContainer.appendChild(materialsSelector);
             root.appendChild(meshContainer);
-        }, name.c_str() );
+        }, id.c_str(), mesh->getName().c_str() );
 
-        addMaterialForMesh( name, "default", mesh->getMaterial() );
+        addMaterialForMesh( id, "default", mesh->getMaterial() );
     }
 
-    void MaterialSelector::addMaterialForMesh( const std::string& mesh, const std::string& id, const std::shared_ptr< Resources::Geometry::Material >& material )
+    void MaterialSelector::addMaterialForMesh( const std::string& meshID, const std::string& materialID, const std::shared_ptr< Resources::Geometry::Material >& material )
     {
         EM_ASM
         ( {
@@ -84,7 +84,7 @@ namespace WebEngine::UI
             materialContainer.appendChild(materialName);
 
             root.appendChild(materialContainer);
-        }, mesh.c_str(), id.c_str(), material->getName().c_str(), material->getAlbedo()->getLocation().c_str() );
+        }, meshID.c_str(), materialID.c_str(), material->getName().c_str(), material->getAlbedo()->getLocation().c_str() );
     }
 
     void MaterialSelector::setMaterial( std::string mesh, std::string material )

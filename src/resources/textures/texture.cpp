@@ -20,8 +20,21 @@ namespace WebEngine::Resources::Textures
         glBindTexture( GL_TEXTURE_2D, m_textureInfo.Id );
     }
 
-    void Texture::unbind() const
+    void Texture::bindCubeMap( uint32_t slot ) const
     {
+        glActiveTexture( GL_TEXTURE0 + slot );
+        glBindTexture( GL_TEXTURE_CUBE_MAP, m_textureInfo.Id );
+    }
+
+    void Texture::unbind( uint32_t slot ) const
+    {
+        glActiveTexture( GL_TEXTURE0 + slot );
         glBindTexture( GL_TEXTURE_2D, 0 );
+    }
+
+    void Texture::unbindCubeMap( uint32_t slot ) const
+    {
+        glActiveTexture( GL_TEXTURE0 + slot );
+        glBindTexture( GL_TEXTURE_CUBE_MAP, 0 );
     }
 }

@@ -18,8 +18,8 @@ namespace WebEngine::UI
         static inline Core::Eventing::Event< std::string, std::string > MaterialUpdateEvent;
 
         static void addMeshes( const std::map< std::string, std::unique_ptr< Resources::Geometry::Mesh > >& meshes );
-        static void addMesh( const std::string& name, const std::unique_ptr< Resources::Geometry::Mesh >& mesh );
-        static void addMaterialForMesh( const std::string& mesh, const std::string& id, const std::shared_ptr< Resources::Geometry::Material >& material );
+        static void addMesh( const std::string& id, const std::unique_ptr< Resources::Geometry::Mesh >& mesh );
+        static void addMaterialForMesh( const std::string& meshID, const std::string& materialID, const std::shared_ptr< Resources::Geometry::Material >& material );
         static void setMaterial( std::string mesh, std::string material );
         static void clearMeshesList();
     };

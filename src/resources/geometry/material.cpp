@@ -35,34 +35,54 @@ namespace WebEngine::Resources::Geometry
             m_albedo->bind( 0 );
 
         if ( m_normal )
+        {
+            shader.setInt( "material.normalExist", 1 );
             m_normal->bind( 1 );
+        }
+        else
+            shader.setInt( "material.normalExist", 0 );
 
         if ( m_metallic )
+        {
+            shader.setInt( "material.metallicExist", 1 );
             m_metallic->bind( 2 );
+        }
+        else
+            shader.setInt( "material.metallicExist", 0 );
 
         if ( m_roughness )
+        {
+            shader.setInt( "material.roughnessExist", 1 );
             m_roughness->bind( 3 );
+        }
+        else
+            shader.setInt( "material.roughnessExist", 0 );
 
         if ( m_ao )
+        {
+            shader.setInt( "material.aoExist", 1 );
             m_ao->bind( 4 );
+        }
+        else
+            shader.setInt( "material.aoExist", 0 );
     }
 
     void Material::unbind() const
     {
         if ( m_albedo )
-            m_albedo->unbind();
+            m_albedo->unbind( 0 );
 
         if ( m_normal )
-            m_normal->unbind();
+            m_normal->unbind( 1 );
 
         if ( m_metallic )
-            m_metallic->unbind();
+            m_metallic->unbind( 2 );
 
         if ( m_roughness )
-            m_roughness->unbind();
+            m_roughness->unbind( 3 );
 
         if ( m_ao )
-            m_ao->unbind();
+            m_ao->unbind( 4 );
     }
 
     void Material::loadAlbedo( const std::filesystem::path& albedoPath )

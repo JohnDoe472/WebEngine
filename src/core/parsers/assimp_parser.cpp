@@ -40,9 +40,11 @@ namespace WebEngine::Core::Parsers
         for ( uint32_t i = 0; i < node->mNumMeshes; ++i )
         {
             aiMesh* mesh = scene->mMeshes[ node->mMeshes[ i ] ];
-            std::string name = node->mName.C_Str();
+            std::string name = std::string( node->mName.C_Str() ) + "_" + mesh->mName.C_Str() + "_" +
+                               std::to_string( i );
             name.erase( remove_if( name.begin(), name.end(), isspace ), name.end() );
             newMeshes[ name ] = processMesh( nodeTransformation, mesh, scene );
+            newMeshes[ name ]->setName( node->mName.C_Str() );
         }
 
         // Then do the same for each of its children

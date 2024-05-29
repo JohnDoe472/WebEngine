@@ -38,6 +38,9 @@ namespace WebEngine::Resources::Geometry
         void setDefaultMaterial() { m_currentMaterial = nullptr; }
         void setMaterial( std::shared_ptr< Material > material ) { m_currentMaterial = material;}
 
+        const std::string& getName() const { return m_name; }
+        void setName( std::string name ) { m_name = name; }
+
     private:
         void createBuffers( const std::vector< Vertex >& vertices, const std::vector< uint32_t >& indices );
 
@@ -49,6 +52,8 @@ namespace WebEngine::Resources::Geometry
 
         uint64_t m_vertexCount = 0;
         uint64_t m_indexCount = 0;
+
+        std::string m_name = "";
     };
 }
 

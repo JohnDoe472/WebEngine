@@ -4,6 +4,7 @@
 
 #include <memory>
 #include <filesystem>
+#include <vector>
 
 #include "resources/textures/texture.hpp"
 
@@ -19,6 +20,11 @@ namespace WebEngine::Core::Parsers
                                        FilterMode firstFilter = FilterMode::eTFM_Linear,
                                        FilterMode secondFilter = FilterMode::eTFM_Linear,
                                        bool generateMipmap = true, bool flip = false );
+
+        static TexturePtr loadCubemap( std::vector<std::filesystem::path>& faces,
+                                       FilterMode firstFilter = FilterMode::eTFM_Linear,
+                                       FilterMode secondFilter = FilterMode::eTFM_Linear,
+                                       bool flip = false );
     };
 }
 

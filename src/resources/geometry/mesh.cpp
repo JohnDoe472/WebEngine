@@ -79,6 +79,11 @@ namespace WebEngine::Resources::Geometry
 
     void Mesh::unbind( const Shaders::Shader& shader ) const
     {
+        if ( m_currentMaterial )
+            m_currentMaterial->unbind();
+        else
+            m_defaultMaterial->unbind();
+
         GLint id = glGetAttribLocation( shader.Id, "vPosition" );
         if ( id != -1 )
             glDisableVertexAttribArray( id );

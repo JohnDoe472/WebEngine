@@ -32,7 +32,9 @@ namespace WebEngine::Resources::Textures
         Texture& operator=( const Texture&& other ) = delete;
 
         void bind( uint32_t slot ) const;
-        void unbind() const;
+        void bindCubeMap( uint32_t slot) const;
+        void unbind( uint32_t slot ) const;
+        void unbindCubeMap( uint32_t slot ) const;
 
         const std::filesystem::path& getLocation() const { return m_location; }
 

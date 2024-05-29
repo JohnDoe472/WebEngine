@@ -49,6 +49,7 @@ namespace WebEngine::Core
         Services::ServiceLocator::provide< Window::SDL2 >( settings );
 
         m_renderer = std::make_unique< OpenGL::Renderer >();
+        //m_defaultLevel = std::make_unique< Resources::Levels::DefaultLevel >();
         m_houseScene = std::make_unique< Resources::Levels::HouseScene >();
     }
 
@@ -62,10 +63,7 @@ namespace WebEngine::Core
         Engine* engine = reinterpret_cast< Engine* >( args );
 
         if ( !engine )
-        {
-            std::cout << "Can't cast args to Engine inside main loop" << std::endl;
             throw std::runtime_error( "Can't cast args to Engine inside main loop" );
-        }
 
         engine->mainLoop();
     }
@@ -76,6 +74,7 @@ namespace WebEngine::Core
 
         window->pollEvents();
         m_renderer->prepareFrame();
+        //m_defaultLevel->draw( m_clock->getDeltaTime() );
         m_houseScene->draw( m_clock->getDeltaTime() );
         window->swapBuffers();
     }

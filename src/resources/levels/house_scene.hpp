@@ -9,9 +9,10 @@
 #include "resources/cameras/camera.hpp"
 #include "resources/cameras/camera_movement.hpp"
 #include "resources/lights/directional_light.hpp"
-#include "resources/objects/model.hpp"
 #include "resources/lights/point_light.hpp"
+#include "resources/objects/model.hpp"
 #include "resources/objects/light_source.hpp"
+#include "resources/objects/skybox.hpp"
 #include "resources/shaders/shader.hpp"
 
 namespace WebEngine::Resources::Levels
@@ -24,6 +25,7 @@ namespace WebEngine::Resources::Levels
         using ModelPtr            = std::unique_ptr< WebEngine::Resources::Objects::Model >;
         using PointLightPtr       = std::unique_ptr< WebEngine::Resources::Lights::PointLight >;
         using ShaderPtr           = std::unique_ptr< WebEngine::Resources::Shaders::Shader >;
+        using SkyboxPtr           = std::unique_ptr< WebEngine::Resources::Objects::Skybox >;
 
     public:
         HouseScene();
@@ -40,6 +42,7 @@ namespace WebEngine::Resources::Levels
         void initDefault();
         void initLights();
         void initMaterials();
+        void initSkybox();
 
         void updateMaterial( std::string mesh, std::string material );
     
@@ -49,6 +52,10 @@ namespace WebEngine::Resources::Levels
         ModelPtr m_model = nullptr;
         ShaderPtr m_defaultShader = nullptr;
         ShaderPtr m_lightSourceShader = nullptr;
+
+        // Skybox
+        ShaderPtr m_skyboxShader = nullptr;
+        SkyboxPtr m_skybox = nullptr;
 
         // Lihgting
         DirectionalLightPtr m_directionalLight = nullptr;

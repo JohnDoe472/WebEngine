@@ -13,28 +13,20 @@ HouseScene::HouseScene() {
     initDefault();
 }
 
-void HouseScene::draw( float dt ) const{
+void HouseScene::draw( float dt ) const
+{
     m_cameraMovement->handleInput( dt );
     m_defaultShader->bind();
 
     m_defaultShader->setMat4( "projection", m_camera->getProjectionMatrix() );
     m_defaultShader->setMat4( "view", m_camera->getViewMatrix() );
-    m_defaultShader->setVec3( "viewPos", m_camera->getPosition() );
-    m_defaultShader->setFloat( "material.shininess", 32.0f );
-
-    m_defaultShader->setVec3( "dirLight.direction", m_directionalLight->getDirection() );
-    m_defaultShader->setVec3( "dirLight.ambient", m_directionalLight->getAmbient() );
-    m_defaultShader->setVec3( "dirLight.diffuse", m_directionalLight->getDiffuse() );
-    m_defaultShader->setVec3( "dirLight.specular", m_directionalLight->getSpecular() );
+    m_defaultShader->setVec3( "camPos", m_camera->getPosition() );
 
     for ( size_t i = 0; i < m_pointLights.size(); ++i )
     {
-        std::string name = "pointLights[" + std::to_string( i ) + "].";
+        std::string name = "lights[" + std::to_string( i ) + "].";
         m_defaultShader->setVec3( name + "position", m_pointLights[ i ]->getPosition() );
-        m_defaultShader->setVec3( name + "ambient", m_pointLights[ i ]->getAmbient() );
-        m_defaultShader->setVec3( name + "diffuse", m_pointLights[ i ]->getDiffuse() );
-        m_defaultShader->setVec3( name + "specular", m_pointLights[ i ]->getSpecular() );
-        m_defaultShader->setVec3( name + "attenuation", m_pointLights[ i ]->getAttenuation() );
+        m_defaultShader->setVec3( name + "color", m_pointLights[ i ]->getColor() );
     }
 
     if ( m_model )
@@ -54,6 +46,18 @@ void HouseScene::draw( float dt ) const{
         ptr->draw( *m_lightSourceShader.get() );
 
     m_lightSourceShader->unbind();
+
+    glDepthFunc( GL_LEQUAL ); // change depth function so depth test passes when values are equal to depth buffer's content
+    m_skyboxShader->bind();
+
+    m_skyboxShader->setMat4( "projection", m_camera->getProjectionMatrix() );
+    glm::mat4 view = glm::mat4( glm::mat3( m_camera->getViewMatrix() ) );
+    m_skyboxShader->setMat4( "view", view);
+
+    m_skybox->draw( *m_skyboxShader.get() );
+
+    m_skyboxShader->unbind();
+    glDepthFunc( GL_LESS ); // set depth function back to default
 }
 
 void HouseScene::initDefault() {
@@ -99,20 +103,40 @@ void HouseScene::initDefault() {
     initLights();
 
     UI::MaterialSelector::clearMeshesList();
-    UI::MaterialSelector::addMeshes( m_model->getMeshes() );
+    
+    for ( const auto& mesh : m_model->getMeshes() )
+    {
+        if ( mesh.first.find( "Wall" ) != std::string::npos ||
+             mesh.first.find( "Ceiling" ) != std::string::npos || 
+             mesh.first.find( "Floor" ) != std::string::npos )
+        {
+            UI::MaterialSelector::addMesh( mesh.first, mesh.second );
+        }
+    }
 
     initMaterials();
 
-    for ( const auto& material : m_materials )
+    for ( const auto& mesh : m_model->getMeshes() )
     {
-        for ( const auto& mesh : m_model->getMeshes() )
+        if ( mesh.first.find( "Wall" ) != std::string::npos ||
+             mesh.first.find( "Ceiling" ) != std::string::npos )
         {
-            UI::MaterialSelector::addMaterialForMesh( mesh.first, material.first, material.second );
+            UI::MaterialSelector::addMaterialForMesh( mesh.first, "art_deco", m_materials[ "art_deco" ] );
+            UI::MaterialSelector::addMaterialForMesh( mesh.first, "blue_shibori", m_materials[ "blue_shibori" ] );
+            UI::MaterialSelector::addMaterialForMesh( mesh.first, "emerald_peaks", m_materials[ "emerald_peaks" ] );
+        }
+        else if ( mesh.first.find( "Floor" ) != std::string::npos )
+        {
+            UI::MaterialSelector::addMaterialForMesh( mesh.first, "black_wood", m_materials[ "black_wood" ] );
+            UI::MaterialSelector::addMaterialForMesh( mesh.first, "brown_wood", m_materials[ "brown_wood" ] );
+            UI::MaterialSelector::addMaterialForMesh( mesh.first, "white_wood", m_materials[ "white_wood" ] );
         }
     }
 
     m_materialUpdateListenerID = UI::MaterialSelector::MaterialUpdateEvent.addListener( 
         std::bind( &HouseScene::updateMaterial, this, std::placeholders::_1, std::placeholders::_2 ) );
+
+    initSkybox();
 }
 
 void HouseScene::initLights()
@@ -121,33 +145,33 @@ void HouseScene::initLights()
     m_directionalLight->setDirection( glm::vec3( 0.4f, 1.0f, 0.4f ) );
     m_directionalLight->setDiffuse( glm::vec3( 1.0f ) );
     m_directionalLight->setSpecular( glm::vec3( 0.05f ) );
-    m_directionalLight->setColor( glm::vec3( 4.0f, 4.0f, 4.0f ) );
+    m_directionalLight->setColor( glm::vec3( 8.0f, 8.0f, 8.0f ) );
 
     PointLightPtr pointLight1 = std::make_unique< Lights::PointLight >();
     pointLight1->setDiffuse( glm::vec3( 0.8f ) );
-    pointLight1->setSpecular( glm::vec3( 1.0f ) );
-    pointLight1->setAttenuation( glm::vec3( 0.04f, 0.3f, 0.9f ) );
-    pointLight1->setColor( glm::vec3( 0.0f, 0.0f, 0.0f ) );
-    pointLight1->setPosition( glm::vec3( -0.00661984, -6.37535, -14.2463 ) );
-    pointLight1->setScale( glm::vec3( 0.01f ) );
+    pointLight1->setSpecular( glm::vec3( 0.3f ) );
+    pointLight1->setAttenuation( glm::vec3( 0.001f, 0.5f, 0.8f ) );
+    pointLight1->setColor( glm::vec3( 1.0f, 1.0f, 1.0f ) );
+    pointLight1->setPosition( glm::vec3( -0.00661984, -6.8, -14.2463 ) );
+    pointLight1->setScale( glm::vec3( 0.0001f ) );
     m_pointLights[0] = std::move( pointLight1 );
 
     PointLightPtr pointLight2 = std::make_unique< Lights::PointLight >();
     pointLight2->setDiffuse( glm::vec3( 0.8f ) );
-    pointLight2->setSpecular( glm::vec3( 1.0f ) );
+    pointLight2->setSpecular( glm::vec3( 0.3f ) );
     pointLight2->setAttenuation( glm::vec3( 0.005f, 0.2f, 0.3f ) );
     pointLight2->setColor( glm::vec3( 0.9f, 1.0f, 0.95f ) );
-    pointLight2->setPosition( glm::vec3( -2.5, -8.5, -14 ) );
-    pointLight2->setScale( glm::vec3( 0.01f ) );
+    pointLight2->setPosition( glm::vec3( -2.5, -8.5, -14.0f ) );
+    pointLight2->setScale( glm::vec3( 0.0001f ) );
     m_pointLights[1] = std::move( pointLight2 );
 
     PointLightPtr pointLight3 = std::make_unique< Lights::PointLight >();
     pointLight3->setDiffuse( glm::vec3( 0.8f ) );
-    pointLight3->setSpecular( glm::vec3( 1.0f ) );
+    pointLight3->setSpecular( glm::vec3( 0.3f ) );
     pointLight3->setAttenuation( glm::vec3( 0.005f, 0.2f, 0.3f ) );
     pointLight3->setColor( glm::vec3( 0.9f, 1.0f, 0.95f ) );
-    pointLight3->setPosition( glm::vec3( 2.5, -8.5, -14 ) );
-    pointLight3->setScale( glm::vec3( 0.01f ) );
+    pointLight3->setPosition( glm::vec3( 2.5, -8.5, -14.0f ) );
+    pointLight3->setScale( glm::vec3( 0.0001f ) );
     m_pointLights[2] = std::move( pointLight3 );
 }
 
@@ -200,4 +224,21 @@ void HouseScene::updateMaterial( std::string mesh, std::string material )
 {
     Resources::Geometry::Mesh& meshRef = m_model->getMesh( mesh );
     meshRef.setMaterial( m_materials[ material ] );
+}
+
+void HouseScene::initSkybox()
+{
+    m_skyboxShader = std::make_unique< Shaders::Shader >( Shaders::ShaderLocation{"shaders/skybox_vertex.vs", "shaders/skybox_fragment.fs"} );
+
+    std::vector< std::filesystem::path > faces
+    {
+        "assets/skyboxes/skybox1/right.jpg",
+        "assets/skyboxes/skybox1/left.jpg",
+        "assets/skyboxes/skybox1/top.jpg",
+        "assets/skyboxes/skybox1/bottom.jpg",
+        "assets/skyboxes/skybox1/front.jpg",
+        "assets/skyboxes/skybox1/back.jpg"
+    };
+
+    m_skybox = std::make_unique< Objects::Skybox >( faces );
 }
