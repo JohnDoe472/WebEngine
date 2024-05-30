@@ -58,7 +58,6 @@ namespace WebEngine::Resources::Levels
         SkyboxPtr m_skybox = nullptr;
 
         // Lihgting
-        DirectionalLightPtr m_directionalLight = nullptr;
         std::array< PointLightPtr, 3 > m_pointLights;
 
         // Materials

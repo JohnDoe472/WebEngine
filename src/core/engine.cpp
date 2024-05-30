@@ -2,7 +2,6 @@
 #include "core/open_gl/renderer.hpp"
 #include "core/services/service_locator.hpp"
 #include "core/utils/clock.hpp"
-#include "resources/levels/default_level.hpp"
 #include "resources/levels/house_scene.hpp"
 #include "window/sdl2.hpp"
 
@@ -20,9 +19,6 @@ namespace WebEngine::Core
 
     Engine::~Engine()
     {
-        if ( m_defaultLevel )
-            m_defaultLevel = nullptr;
-
         if ( m_renderer )
             m_renderer = nullptr;
             
@@ -49,7 +45,6 @@ namespace WebEngine::Core
         Services::ServiceLocator::provide< Window::SDL2 >( settings );
 
         m_renderer = std::make_unique< OpenGL::Renderer >();
-        //m_defaultLevel = std::make_unique< Resources::Levels::DefaultLevel >();
         m_houseScene = std::make_unique< Resources::Levels::HouseScene >();
     }
 
@@ -74,7 +69,6 @@ namespace WebEngine::Core
 
         window->pollEvents();
         m_renderer->prepareFrame();
-        //m_defaultLevel->draw( m_clock->getDeltaTime() );
         m_houseScene->draw( m_clock->getDeltaTime() );
         window->swapBuffers();
     }

@@ -8,13 +8,9 @@ varying vec3 normal;
 struct Material
 {
     sampler2D albedo;
-    int normalExist;
     sampler2D normal;
-    int metallicExist;
     sampler2D metallic;
-    int roughnessExist;
     sampler2D roughness;
-    int aoExist;
     sampler2D ao;
 };
 
@@ -22,6 +18,8 @@ struct Light
 {
     vec3 position;
     vec3 color;
+    
+    vec3 attenuation;
 };
 
 uniform Material material;
@@ -33,9 +31,14 @@ const float PI = 3.14159265359;
 
 vec3 getNormalFromMap()
 {
+    vec4 color = texture2D(material.normal, texCoord);
+
     vec3 tangentNormal = vec3(1.0, 1.0, 1.0);
 
-    if (material.normalExist == 1) {
+    if (color.r == 0.0 && color.g == 0.0 && color.b == 0.0 && color.a != 0.0) {
+        tangentNormal = vec3(1.0, 1.0, 1.0);
+    }
+    else {
         tangentNormal = texture2D(material.normal, texCoord).xyz * 2.0 - 1.0;
     }
 
@@ -104,22 +107,9 @@ float getPBRComponent(sampler2D texture, vec2 texCoord)
 void main()
 {
     vec3 albedo = pow(texture2D(material.albedo, texCoord).rgb, vec3(2.2));
-
-    float metallic = 1.0;
-    float roughness = 1.0;
-    float ao = 1.0;
-
-    if (material.metallicExist == 1) {
-        metallic = getPBRComponent(material.metallic, texCoord);
-    }
-
-    if (material.roughnessExist == 1) {
-        roughness = getPBRComponent(material.roughness, texCoord);
-    }
-
-    if (material.aoExist == 1) {
-        ao = getPBRComponent(material.ao, texCoord);
-    }
+    float metallic = getPBRComponent(material.metallic, texCoord);
+    float roughness = getPBRComponent(material.roughness, texCoord);
+    float ao = getPBRComponent(material.ao, texCoord);
 
     vec3 N = getNormalFromMap();
     vec3 V = normalize(camPos - worldPos);
@@ -138,7 +128,8 @@ void main()
         vec3 L = normalize(lights[i].position - worldPos);
         vec3 H = normalize(V + L);
         float distance = length(lights[i].position - worldPos);
-        float attenuation = 1.0 / (distance * distance);
+        // float attenuation = 1.0 / (distance * distance);
+        float attenuation = 1.0 / (lights[i].attenuation.x + lights[i].attenuation.y * distance + lights[i].attenuation.z * (distance * distance));
         vec3 radiance = lights[i].color * attenuation;
 
         // Cook-Torrance BRDF
@@ -170,7 +161,7 @@ void main()
     
     // ambient lighting (note that the next IBL tutorial will replace 
     // this ambient lighting with environment lighting).
-    vec3 ambient = vec3(0.03) * albedo * ao;
+    vec3 ambient = vec3(0.1) * albedo * ao;
     
     vec3 color = ambient + Lo;
 

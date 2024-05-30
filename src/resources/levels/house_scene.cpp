@@ -27,6 +27,7 @@ void HouseScene::draw( float dt ) const
         std::string name = "lights[" + std::to_string( i ) + "].";
         m_defaultShader->setVec3( name + "position", m_pointLights[ i ]->getPosition() );
         m_defaultShader->setVec3( name + "color", m_pointLights[ i ]->getColor() );
+        m_defaultShader->setVec3( name + "attenuation", m_pointLights[ i ]->getAttenuation() );
     }
 
     if ( m_model )
@@ -60,7 +61,8 @@ void HouseScene::draw( float dt ) const
     glDepthFunc( GL_LESS ); // set depth function back to default
 }
 
-void HouseScene::initDefault() {
+void HouseScene::initDefault()
+{
     std::shared_ptr< Window::SDL2 > window = Core::Services::ServiceLocator::get< Window::SDL2 >();
 
     glm::i32vec2 size = window->getWindowSize();
@@ -122,14 +124,18 @@ void HouseScene::initDefault() {
              mesh.first.find( "Ceiling" ) != std::string::npos )
         {
             UI::MaterialSelector::addMaterialForMesh( mesh.first, "art_deco", m_materials[ "art_deco" ] );
-            UI::MaterialSelector::addMaterialForMesh( mesh.first, "blue_shibori", m_materials[ "blue_shibori" ] );
             UI::MaterialSelector::addMaterialForMesh( mesh.first, "emerald_peaks", m_materials[ "emerald_peaks" ] );
+            UI::MaterialSelector::addMaterialForMesh( mesh.first, "plaster_paint_light", m_materials[ "plaster_paint_light" ] );
+            UI::MaterialSelector::addMaterialForMesh( mesh.first, "plaster_paint_beige", m_materials[ "plaster_paint_beige" ] );
+            UI::MaterialSelector::addMaterialForMesh( mesh.first, "dark_gold_marble", m_materials[ "dark_gold_marble" ] );
         }
         else if ( mesh.first.find( "Floor" ) != std::string::npos )
         {
-            UI::MaterialSelector::addMaterialForMesh( mesh.first, "black_wood", m_materials[ "black_wood" ] );
             UI::MaterialSelector::addMaterialForMesh( mesh.first, "brown_wood", m_materials[ "brown_wood" ] );
             UI::MaterialSelector::addMaterialForMesh( mesh.first, "white_wood", m_materials[ "white_wood" ] );
+            UI::MaterialSelector::addMaterialForMesh( mesh.first, "dark_tiles", m_materials[ "dark_tiles" ] );
+            UI::MaterialSelector::addMaterialForMesh( mesh.first, "white_tiles", m_materials[ "white_tiles" ] );
+            UI::MaterialSelector::addMaterialForMesh( mesh.first, "dark_light_tiles", m_materials[ "dark_light_tiles" ] );
         }
     }
 
@@ -141,38 +147,26 @@ void HouseScene::initDefault() {
 
 void HouseScene::initLights()
 {
-    m_directionalLight = std::make_unique< Lights::DirectionalLight >();
-    m_directionalLight->setDirection( glm::vec3( 0.4f, 1.0f, 0.4f ) );
-    m_directionalLight->setDiffuse( glm::vec3( 1.0f ) );
-    m_directionalLight->setSpecular( glm::vec3( 0.05f ) );
-    m_directionalLight->setColor( glm::vec3( 8.0f, 8.0f, 8.0f ) );
+    PointLightPtr backLight = std::make_unique< Lights::PointLight >();
+    backLight->setAttenuation( glm::vec3( 1.0f, 0.022f, 0.0019f ) );
+    backLight->setColor( glm::vec3( 1.0f, 1.0f, 1.0f ) );
+    backLight->setPosition( glm::vec3( -0.00661984, -6.8, -13.0f ) );
+    backLight->setScale( glm::vec3( 0.00001f ) );
+    m_pointLights[0] = std::move( backLight );
 
-    PointLightPtr pointLight1 = std::make_unique< Lights::PointLight >();
-    pointLight1->setDiffuse( glm::vec3( 0.8f ) );
-    pointLight1->setSpecular( glm::vec3( 0.3f ) );
-    pointLight1->setAttenuation( glm::vec3( 0.001f, 0.5f, 0.8f ) );
-    pointLight1->setColor( glm::vec3( 1.0f, 1.0f, 1.0f ) );
-    pointLight1->setPosition( glm::vec3( -0.00661984, -6.8, -14.2463 ) );
-    pointLight1->setScale( glm::vec3( 0.0001f ) );
-    m_pointLights[0] = std::move( pointLight1 );
+    PointLightPtr rightLamp = std::make_unique< Lights::PointLight >();
+    rightLamp->setAttenuation( glm::vec3( 1.0f, 0.022f, 0.0019f ) );
+    rightLamp->setColor( glm::vec3( 1.0f, 1.0f, 1.0f ) );
+    rightLamp->setPosition( glm::vec3( -2.5, -8.5, -14.0f ) );
+    rightLamp->setScale( glm::vec3( 0.00001f ) );
+    m_pointLights[1] = std::move( rightLamp );
 
-    PointLightPtr pointLight2 = std::make_unique< Lights::PointLight >();
-    pointLight2->setDiffuse( glm::vec3( 0.8f ) );
-    pointLight2->setSpecular( glm::vec3( 0.3f ) );
-    pointLight2->setAttenuation( glm::vec3( 0.005f, 0.2f, 0.3f ) );
-    pointLight2->setColor( glm::vec3( 0.9f, 1.0f, 0.95f ) );
-    pointLight2->setPosition( glm::vec3( -2.5, -8.5, -14.0f ) );
-    pointLight2->setScale( glm::vec3( 0.0001f ) );
-    m_pointLights[1] = std::move( pointLight2 );
-
-    PointLightPtr pointLight3 = std::make_unique< Lights::PointLight >();
-    pointLight3->setDiffuse( glm::vec3( 0.8f ) );
-    pointLight3->setSpecular( glm::vec3( 0.3f ) );
-    pointLight3->setAttenuation( glm::vec3( 0.005f, 0.2f, 0.3f ) );
-    pointLight3->setColor( glm::vec3( 0.9f, 1.0f, 0.95f ) );
-    pointLight3->setPosition( glm::vec3( 2.5, -8.5, -14.0f ) );
-    pointLight3->setScale( glm::vec3( 0.0001f ) );
-    m_pointLights[2] = std::move( pointLight3 );
+    PointLightPtr leftLamp = std::make_unique< Lights::PointLight >();
+    leftLamp->setAttenuation( glm::vec3( 1.0f, 0.022f, 0.0019f ) );
+    leftLamp->setColor( glm::vec3( 1.0f, 1.0f, 1.0f ) );
+    leftLamp->setPosition( glm::vec3( 2.5, -8.5, -14.0f ) );
+    leftLamp->setScale( glm::vec3( 0.00001f ) );
+    m_pointLights[2] = std::move( leftLamp );
 }
 
 void HouseScene::initMaterials()
@@ -184,18 +178,6 @@ void HouseScene::initMaterials()
     artDeco->loadRougness( "assets/materials/ArtDeco/ArtDeco_Roughness.png" );
     artDeco->loadAO( "assets/materials/ArtDeco/ArtDeco_AO.png" );
     m_materials[ "art_deco" ] = std::move( artDeco );
-
-    std::shared_ptr< Geometry::Material > blackWood = std::make_shared< Geometry::Material >( "Black Wood" );
-    blackWood->loadAlbedo( "assets/materials/BlackWood/BlackWood_Albedo.png" );
-    blackWood->loadNormal( "assets/materials/BlackWood/BlackWood_Normal.png" );
-    blackWood->loadRougness( "assets/materials/BlackWood/BlackWood_Roughness.png" );
-    blackWood->loadAO( "assets/materials/BlackWood/BlackWood_AO.png" );
-    m_materials[ "black_wood" ] = std::move( blackWood );
-
-    std::shared_ptr< Geometry::Material > blueShibori = std::make_shared< Geometry::Material >( "Blue Shibori" );
-    blueShibori->loadAlbedo( "assets/materials/BlueShibori/BlueShibori_Albedo.png" );
-    blueShibori->loadNormal( "assets/materials/BlueShibori/BlueShibori_Normal.png" );
-    m_materials[ "blue_shibori" ] = std::move( blueShibori );
 
     std::shared_ptr< Geometry::Material > brownWood = std::make_shared< Geometry::Material >( "Brown Wood" );
     brownWood->loadAlbedo( "assets/materials/BrownWood/BrownWood_Albedo.png" );
@@ -218,6 +200,55 @@ void HouseScene::initMaterials()
     whiteWood->loadRougness( "assets/materials/WhiteWood/WhiteWood_Roughness.png" );
     whiteWood->loadAO( "assets/materials/WhiteWood/WhiteWood_AO.png" );
     m_materials[ "white_wood" ] = std::move( whiteWood );
+
+    // DarkLightTiles
+    std::shared_ptr< Geometry::Material > darkLightTiles = std::make_shared< Geometry::Material >( "Dark Light Tiles" );
+    darkLightTiles->loadAlbedo( "assets/materials/DarkLightTiles/DarkLightTiles_Albedo.jpg" );
+    darkLightTiles->loadNormal( "assets/materials/DarkLightTiles/DarkLightTiles_Normal.jpg" );
+    darkLightTiles->loadRougness( "assets/materials/DarkLightTiles/DarkLightTiles_Roughness.jpg" );
+    darkLightTiles->loadAO( "assets/materials/DarkLightTiles/DarkLightTiles_AO.jpg" );
+    m_materials[ "dark_light_tiles" ] = std::move( darkLightTiles );
+    
+    // PlasterPaintLight
+    std::shared_ptr< Geometry::Material > plasterPaintLight = std::make_shared< Geometry::Material >( "Plaster Paint Light" );
+    plasterPaintLight->loadAlbedo( "assets/materials/PlasterPaintLight/PlasterPaintLight_Albedo.jpg" );
+    plasterPaintLight->loadNormal( "assets/materials/PlasterPaintLight/PlasterPaintLight_Normal.jpg" );
+    plasterPaintLight->loadRougness( "assets/materials/PlasterPaintLight/PlasterPaintLight_Roughness.jpg" );
+    plasterPaintLight->loadAO( "assets/materials/PlasterPaintLight/PlasterPaintLight_AO.jpg" );
+    m_materials[ "plaster_paint_light" ] = std::move( plasterPaintLight );
+
+    // PlasterPaintBeige
+    std::shared_ptr< Geometry::Material > plasterPaintBeige = std::make_shared< Geometry::Material >( "Plaster Paint Beige" );
+    plasterPaintBeige->loadAlbedo( "assets/materials/PlasterPaintBeige/PlasterPaintBeige_Albedo.jpg" );
+    plasterPaintBeige->loadNormal( "assets/materials/PlasterPaintBeige/PlasterPaintBeige_Normal.jpg" );
+    plasterPaintBeige->loadRougness( "assets/materials/PlasterPaintBeige/PlasterPaintBeige_Roughness.jpg" );
+    plasterPaintBeige->loadAO( "assets/materials/PlasterPaintBeige/PlasterPaintBeige_AO.jpg" );
+    m_materials[ "plaster_paint_beige" ] = std::move( plasterPaintBeige );
+
+    // DarkGoldMarble
+    std::shared_ptr< Geometry::Material > darkGoldMarble = std::make_shared< Geometry::Material >( "Dark Gold Marble" );
+    darkGoldMarble->loadAlbedo( "assets/materials/DarkGoldMarble/DarkGoldMarble_Albedo.jpg" );
+    darkGoldMarble->loadNormal( "assets/materials/DarkGoldMarble/DarkGoldMarble_Normal.jpg" );
+    darkGoldMarble->loadRougness( "assets/materials/DarkGoldMarble/DarkGoldMarble_Roughness.jpg" );
+    darkGoldMarble->loadMetallic( "assets/materials/DarkGoldMarble/DarkGoldMarble_Metallic.jpg" );
+    darkGoldMarble->loadAO( "assets/materials/DarkGoldMarble/DarkGoldMarble_AO.jpg" );
+    m_materials[ "dark_gold_marble" ] = std::move( darkGoldMarble );
+
+    // DarkTiles
+    std::shared_ptr< Geometry::Material > darkTiles = std::make_shared< Geometry::Material >( "Dark Tiles" );
+    darkTiles->loadAlbedo( "assets/materials/DarkTiles/DarkTiles_Albedo.jpg" );
+    darkTiles->loadNormal( "assets/materials/DarkTiles/DarkTiles_Normal.jpg" );
+    darkTiles->loadRougness( "assets/materials/DarkTiles/DarkTiles_Roughness.jpg" );
+    darkTiles->loadAO( "assets/materials/DarkTiles/DarkTiles_AO.jpg" );
+    m_materials[ "dark_tiles" ] = std::move( darkTiles );
+
+    // WhiteTiles
+    std::shared_ptr< Geometry::Material > whiteTiles = std::make_shared< Geometry::Material >( "White Tiles" );
+    whiteTiles->loadAlbedo( "assets/materials/WhiteTiles/WhiteTiles_Albedo.jpg" );
+    whiteTiles->loadNormal( "assets/materials/WhiteTiles/WhiteTiles_Normal.jpg" );
+    whiteTiles->loadRougness( "assets/materials/WhiteTiles/WhiteTiles_Roughness.jpg" );
+    whiteTiles->loadAO( "assets/materials/WhiteTiles/WhiteTiles_AO.jpg" );
+    m_materials[ "white_tiles" ] = std::move( whiteTiles );
 }
 
 void HouseScene::updateMaterial( std::string mesh, std::string material )

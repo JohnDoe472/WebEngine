@@ -41,7 +41,7 @@ foreach (ASSET_FILE ${WEB_ENGINE_ASSETS_LIST})
 endforeach ()
 
 set(WEB_ENGINE_PROJECT "WebEngine")
-    
+
 execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/thirdparty/bootstrap ${CMAKE_SOURCE_DIR}/bin/${CMAKE_SYSTEM_NAME}/${CMAKE_GENERATOR_PLATFORM}/bootstrap)
 

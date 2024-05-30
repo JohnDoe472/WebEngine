@@ -35,36 +35,16 @@ namespace WebEngine::Resources::Geometry
             m_albedo->bind( 0 );
 
         if ( m_normal )
-        {
-            shader.setInt( "material.normalExist", 1 );
             m_normal->bind( 1 );
-        }
-        else
-            shader.setInt( "material.normalExist", 0 );
 
         if ( m_metallic )
-        {
-            shader.setInt( "material.metallicExist", 1 );
             m_metallic->bind( 2 );
-        }
-        else
-            shader.setInt( "material.metallicExist", 0 );
 
         if ( m_roughness )
-        {
-            shader.setInt( "material.roughnessExist", 1 );
             m_roughness->bind( 3 );
-        }
-        else
-            shader.setInt( "material.roughnessExist", 0 );
 
         if ( m_ao )
-        {
-            shader.setInt( "material.aoExist", 1 );
             m_ao->bind( 4 );
-        }
-        else
-            shader.setInt( "material.aoExist", 0 );
     }
 
     void Material::unbind() const

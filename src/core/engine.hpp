@@ -6,7 +6,7 @@
 
 namespace WebEngine::Core::OpenGL { class Renderer; }
 namespace WebEngine::Core::Utils { class Clock; }
-namespace WebEngine::Resources::Levels { class DefaultLevel; class HouseScene; }
+namespace WebEngine::Resources::Levels { class HouseScene; }
 namespace WebEngine::Window { class SDL2; }
 
 namespace WebEngine::Core
@@ -32,7 +32,6 @@ namespace WebEngine::Core
 
         std::unique_ptr< Utils::Clock > m_clock = nullptr;
         std::unique_ptr< OpenGL::Renderer > m_renderer = nullptr;
-        std::unique_ptr< Resources::Levels::DefaultLevel > m_defaultLevel = nullptr;
         std::unique_ptr< Resources::Levels::HouseScene > m_houseScene = nullptr;
     };
 }
