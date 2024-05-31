@@ -148,23 +148,23 @@ void HouseScene::initDefault()
 void HouseScene::initLights()
 {
     PointLightPtr backLight = std::make_unique< Lights::PointLight >();
-    backLight->setAttenuation( glm::vec3( 1.0f, 0.022f, 0.0019f ) );
-    backLight->setColor( glm::vec3( 1.0f, 1.0f, 1.0f ) );
-    backLight->setPosition( glm::vec3( -0.00661984, -6.8, -13.0f ) );
+    backLight->setAttenuation( glm::vec3( 0.0f, 0.022f, 1.0019f ) );
+    backLight->setColor( glm::vec3( 15.0f, 15.0f, 15.0f ) );
+    backLight->setPosition( glm::vec3( -0.0f, -6.8, -17.0f ) );
     backLight->setScale( glm::vec3( 0.00001f ) );
     m_pointLights[0] = std::move( backLight );
 
     PointLightPtr rightLamp = std::make_unique< Lights::PointLight >();
-    rightLamp->setAttenuation( glm::vec3( 1.0f, 0.022f, 0.0019f ) );
-    rightLamp->setColor( glm::vec3( 1.0f, 1.0f, 1.0f ) );
-    rightLamp->setPosition( glm::vec3( -2.5, -8.5, -14.0f ) );
+    rightLamp->setAttenuation( glm::vec3( 0.0f, 0.022f, 0.5019f ) );
+    rightLamp->setColor( glm::vec3( 10.0f, 10.0f, 10.0f ) );
+    rightLamp->setPosition( glm::vec3( -2.34, -8.73, -13.78f ) );
     rightLamp->setScale( glm::vec3( 0.00001f ) );
     m_pointLights[1] = std::move( rightLamp );
 
     PointLightPtr leftLamp = std::make_unique< Lights::PointLight >();
-    leftLamp->setAttenuation( glm::vec3( 1.0f, 0.022f, 0.0019f ) );
-    leftLamp->setColor( glm::vec3( 1.0f, 1.0f, 1.0f ) );
-    leftLamp->setPosition( glm::vec3( 2.5, -8.5, -14.0f ) );
+    leftLamp->setAttenuation( glm::vec3( 0.0f, 0.022f, 0.5019f ) );
+    leftLamp->setColor( glm::vec3( 10.0f, 10.0f, 10.0f ) );
+    leftLamp->setPosition( glm::vec3( 2.34, -8.73, -13.78f ) );
     leftLamp->setScale( glm::vec3( 0.00001f ) );
     m_pointLights[2] = std::move( leftLamp );
 }
