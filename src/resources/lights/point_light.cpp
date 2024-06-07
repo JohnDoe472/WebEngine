@@ -19,7 +19,7 @@ namespace WebEngine::Resources::Lights
         if ( m_lightSource )
         {
             shader.setMat4( "model", m_lightSource->getModel() );
-            shader.setVec4( "color", glm::vec4( getColor(), 1.0f ) );
+            shader.setVec4( "color", glm::vec4( getColorRGB(), 1.0f ) );
             m_lightSource->draw( shader );
         }
     }

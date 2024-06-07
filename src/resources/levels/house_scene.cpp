@@ -24,10 +24,14 @@ void HouseScene::draw( float dt ) const
 
     for ( size_t i = 0; i < m_pointLights.size(); ++i )
     {
-        std::string name = "lights[" + std::to_string( i ) + "].";
+        std::string name = "pointLights[" + std::to_string( i ) + "].";
         m_defaultShader->setVec3( name + "position", m_pointLights[ i ]->getPosition() );
-        m_defaultShader->setVec3( name + "color", m_pointLights[ i ]->getColor() );
-        m_defaultShader->setVec3( name + "attenuation", m_pointLights[ i ]->getAttenuation() );
+        m_defaultShader->setVec3( name + "color", m_pointLights[ i ]->getColorRGB() / glm::vec3( 255.0f ) );
+
+        m_defaultShader->setFloat( name + "intensity", m_pointLights[ i ]->getIntensity() );
+        m_defaultShader->setFloat( name + "constant", m_pointLights[ i ]->getConstant() );
+        m_defaultShader->setFloat( name + "linear", m_pointLights[ i ]->getLinear() );
+        m_defaultShader->setFloat( name + "quadratic", m_pointLights[ i ]->getQuadratic() );
     }
 
     if ( m_model )
@@ -76,13 +80,13 @@ void HouseScene::initDefault()
 
 
     Shaders::ShaderLocation location;
-    location.VertexShaderPath = "shaders/external_model_vertex.vs";
-    location.FragmentShaderPath = "shaders/external_model_fragment.fs";
+    location.VertexShaderPath = "shaders/pbr_vertex.glsl";
+    location.FragmentShaderPath = "shaders/pbr_fragment.glsl";
 
     m_defaultShader = std::make_unique< Shaders::Shader >( location );
 
-    location.VertexShaderPath = "shaders/light_source_vertex.vs";
-    location.FragmentShaderPath = "shaders/light_source_fragment.fs";
+    location.VertexShaderPath = "shaders/light_source_vertex.glsl";
+    location.FragmentShaderPath = "shaders/light_source_fragment.glsl";
     m_lightSourceShader = std::make_unique< Shaders::Shader >( location );
 
     Core::Parsers::AssimpParser parser;
@@ -148,24 +152,33 @@ void HouseScene::initDefault()
 void HouseScene::initLights()
 {
     PointLightPtr backLight = std::make_unique< Lights::PointLight >();
-    backLight->setAttenuation( glm::vec3( 0.0f, 0.022f, 1.0019f ) );
-    backLight->setColor( glm::vec3( 15.0f, 15.0f, 15.0f ) );
+    backLight->setConstant( 1.0f );
+    backLight->setLinear( 0.09f );
+    backLight->setQuadratic( 0.032f );
+    backLight->setColorRGB( glm::vec3( 255.0f, 255.0f, 255.0f ) );
     backLight->setPosition( glm::vec3( -0.0f, -6.8, -17.0f ) );
     backLight->setScale( glm::vec3( 0.00001f ) );
+    backLight->setIntensity( 3.0f );
     m_pointLights[0] = std::move( backLight );
 
     PointLightPtr rightLamp = std::make_unique< Lights::PointLight >();
-    rightLamp->setAttenuation( glm::vec3( 0.0f, 0.022f, 0.5019f ) );
-    rightLamp->setColor( glm::vec3( 10.0f, 10.0f, 10.0f ) );
+    rightLamp->setConstant( 1.0f );
+    rightLamp->setLinear( 0.09f );
+    rightLamp->setQuadratic( 0.032f );
+    rightLamp->setColorRGB( glm::vec3( 255.0f, 255.0f, 255.0f ) );
     rightLamp->setPosition( glm::vec3( -2.34, -8.73, -13.78f ) );
     rightLamp->setScale( glm::vec3( 0.00001f ) );
+    rightLamp->setIntensity( 3.0f );
     m_pointLights[1] = std::move( rightLamp );
 
     PointLightPtr leftLamp = std::make_unique< Lights::PointLight >();
-    leftLamp->setAttenuation( glm::vec3( 0.0f, 0.022f, 0.5019f ) );
-    leftLamp->setColor( glm::vec3( 10.0f, 10.0f, 10.0f ) );
+    leftLamp->setConstant( 1.0f );
+    leftLamp->setLinear( 0.09f );
+    leftLamp->setQuadratic( 0.032f );
+    leftLamp->setColorRGB( glm::vec3( 255.0f, 255.0f, 255.0f ) );
     leftLamp->setPosition( glm::vec3( 2.34, -8.73, -13.78f ) );
     leftLamp->setScale( glm::vec3( 0.00001f ) );
+    leftLamp->setIntensity( 3.0f );
     m_pointLights[2] = std::move( leftLamp );
 }
 
@@ -259,7 +272,7 @@ void HouseScene::updateMaterial( std::string mesh, std::string material )
 
 void HouseScene::initSkybox()
 {
-    m_skyboxShader = std::make_unique< Shaders::Shader >( Shaders::ShaderLocation{"shaders/skybox_vertex.vs", "shaders/skybox_fragment.fs"} );
+    m_skyboxShader = std::make_unique< Shaders::Shader >( Shaders::ShaderLocation{"shaders/skybox_vertex.glsl", "shaders/skybox_fragment.glsl"} );
 
     std::vector< std::filesystem::path > faces
     {

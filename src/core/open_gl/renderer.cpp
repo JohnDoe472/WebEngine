@@ -7,11 +7,12 @@ namespace WebEngine::Core::OpenGL
     Renderer::Renderer()
     {
         glEnable( GL_DEPTH_TEST );
+        glDepthFunc( GL_LESS );
     }
 
     void Renderer::prepareFrame() const
     {
         glClearColor( 0.0f, 0.2f, 0.4f, 1.0f );
-        glClear( GL_COLOR_BUFFER_BIT );
+        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     }
 }

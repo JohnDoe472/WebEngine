@@ -17,11 +17,15 @@ namespace WebEngine::Resources::Lights
         BaseLight& operator=( const BaseLight& other )  = delete;
         BaseLight& operator=( const BaseLight&& other ) = delete;
 
-        void setColor( glm::vec3 color ) { m_color = color; }
-        const glm::vec3& getColor() const { return m_color; }
+        void setColorRGB( glm::vec3 color ) { m_color = color; }
+        void setIntensity( float intensity ) { m_intensity = intensity; }
+
+        const glm::vec3& getColorRGB() const { return m_color; }
+        const float& getIntensity() const { return m_intensity; }
 
     private:
-        glm::vec3 m_color = glm::vec3( 1.0f );
+        glm::vec3 m_color = glm::vec3( 255.0f );
+        float m_intensity = 1.0f;
     };
 }
 

@@ -28,7 +28,7 @@ namespace WebEngine::Resources::Objects
 
     void Model::draw( const Shaders::Shader& shader ) const
     {
-        shader.setMat4( "transposeModel", glm::transpose( glm::inverse( getModel() ) ) );
+        shader.setMat4( "normalMatrix", glm::transpose( glm::inverse( getModel() ) ) );
 
         for ( const auto& mesh : m_meshes )
         {

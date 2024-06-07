@@ -22,17 +22,22 @@ namespace WebEngine::Resources::Lights
 
         void draw( const Shaders::Shader& shader ) const;
 
-        const glm::vec3& getAttenuation() const { return m_attenuation; }
-        void setAttenuation( glm::vec3 attenuation ) { m_attenuation = attenuation; }
-
+        void setConstant( float constant ) { m_constant = constant; }
+        void setLinear( float linear ) { m_linear = linear; }
+        void setQuadratic( float quadratic ) { m_quadratic = quadratic; }
         void setPosition( glm::vec3 position ) { m_lightSource->setPosition( position ); }
-        const glm::vec3& getPosition() const { return m_lightSource->getPosition(); }
-
         void setScale( glm::vec3 scale ) { m_lightSource->setScale( scale ); }
+        
+        const float& getConstant() const { return m_constant; }
+        const float& getLinear() const { return m_linear; }
+        const float& getQuadratic() const { return m_quadratic; }
+        const glm::vec3& getPosition() const { return m_lightSource->getPosition(); }
         const glm::vec3& getScale() const { return m_lightSource->getScale(); }
 
     private:
-        glm::vec3 m_attenuation = glm::vec3( 1.0f, 0.09f, 0.032f );
+        float m_constant  = 1.0f;
+        float m_linear    = 0.09f;
+        float m_quadratic = 0.032f;
 
         LightSourcePtr m_lightSource = nullptr;
     };

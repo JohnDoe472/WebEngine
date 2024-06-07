@@ -67,8 +67,8 @@ namespace WebEngine::Core::Parsers
             aiVector3D position = transform * mesh->mVertices[ i ];
             aiVector3D texCoords = mesh->mTextureCoords[ 0 ] ? mesh->mTextureCoords[ 0 ][ i ] : aiVector3D( 0.0f, 0.0f, 0.0f );
             aiVector3D normal = transform * ( mesh->HasNormals() ? mesh->mNormals[ i ] : aiVector3D( 0.0f, 0.0f, 0.0f ) );
-            aiVector3D tangent = mesh->HasTangentsAndBitangents() ? transform * mesh->mTangents[ i ] : aiVector3D( 0.0f, 0.0f, 0.0f );
-            aiVector3D bitangent = mesh->HasTangentsAndBitangents() ? transform * mesh->mBitangents[ i ] : aiVector3D( 0.0f, 0.0f, 0.0f );
+            aiVector3D tangent = transform * ( mesh->HasTangentsAndBitangents() ? mesh->mTangents[ i ] : aiVector3D( 0.0f, 0.0f, 0.0f ) );
+            aiVector3D bitangent = transform * ( mesh->HasTangentsAndBitangents() ? mesh->mBitangents[ i ] : aiVector3D( 0.0f, 0.0f, 0.0f ) );
 
             newVertices.push_back
             ( {
@@ -127,10 +127,10 @@ namespace WebEngine::Core::Parsers
             newMaterial->loadMetallic( metallicPath );
         }
 
-        if ( material->GetTextureCount( aiTextureType_DIFFUSE_ROUGHNESS ) > 0 )
+        if ( material->GetTextureCount( aiTextureType_DIFFUSE ) > 0 )
         {
             aiString roughness;
-            material->GetTexture( AI_MATKEY_ROUGHNESS_TEXTURE, &roughness );
+            aiGetMaterialString( material, AI_MATKEY_TEXTURE_DIFFUSE( 0 ), &roughness );
             fs::path roughnessPath = m_filePath.parent_path() / roughness.C_Str();
             newMaterial->loadRougness( roughnessPath );
         }

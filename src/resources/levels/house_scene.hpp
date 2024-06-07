@@ -8,7 +8,6 @@
 
 #include "resources/cameras/camera.hpp"
 #include "resources/cameras/camera_movement.hpp"
-#include "resources/lights/directional_light.hpp"
 #include "resources/lights/point_light.hpp"
 #include "resources/objects/model.hpp"
 #include "resources/objects/light_source.hpp"
@@ -21,7 +20,6 @@ namespace WebEngine::Resources::Levels
     {
         using CameraPtr           = std::unique_ptr< WebEngine::Resources::Cameras::Camera >;
         using CameraMovementPtr   = std::unique_ptr< WebEngine::Resources::Cameras::CameraMovement >;
-        using DirectionalLightPtr = std::unique_ptr< WebEngine::Resources::Lights::DirectionalLight >;
         using ModelPtr            = std::unique_ptr< WebEngine::Resources::Objects::Model >;
         using PointLightPtr       = std::unique_ptr< WebEngine::Resources::Lights::PointLight >;
         using ShaderPtr           = std::unique_ptr< WebEngine::Resources::Shaders::Shader >;

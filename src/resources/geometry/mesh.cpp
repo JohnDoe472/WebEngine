@@ -62,7 +62,7 @@ namespace WebEngine::Resources::Geometry
             glVertexAttribPointer( id, 3, GL_FLOAT, GL_FALSE, sizeof( Vertex ), ( void* )offsetof( Vertex, Normals ) );
         }
 
-        id = glGetAttribLocation( shader.Id, "vTanget" );
+        id = glGetAttribLocation( shader.Id, "vTangent" );
         if ( id != -1)
         {
             glEnableVertexAttribArray( id );
@@ -96,7 +96,7 @@ namespace WebEngine::Resources::Geometry
         if ( id != -1)
             glDisableVertexAttribArray( id );
 
-        id = glGetAttribLocation( shader.Id, "vTanget" );
+        id = glGetAttribLocation( shader.Id, "vTangent" );
         if ( id != -1)
             glDisableVertexAttribArray( id );
 

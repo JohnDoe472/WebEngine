@@ -61,4 +61,4 @@ python -m http.server 80
 python3 -m http.server 80
 ```
 
-Then open page ```localhost/WebEngine.html``` in a web browser.
+Then open page ```localhost``` in a web browser.
